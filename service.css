@@ -212,3 +212,80 @@ h1{font-size:clamp(28px,5.4vw,44px);line-height:1.15;letter-spacing:-.01em;margi
     box-shadow:0 12px 22px rgba(108,71,255,.28) !important;
   }
 }
+
+@media (min-width:980px) {
+  .grid {
+    grid-template-columns: 1fr 1fr; /* Ensure equal columns for desktop */
+    gap: 32px; /* Adjust spacing for better alignment */
+  }
+
+  .aside {
+    position: sticky;
+    top: 80px; /* Adjust sticky position for better visibility */
+    align-self: flex-start;
+  }
+
+  .card {
+    padding: 24px; /* Increase padding for better spacing */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  }
+}
+
+/* ===========================
+   PC fixes (>=980px only)
+   — keeps mobile styles unchanged
+   =========================== */
+@media (min-width:980px){
+
+  /* 1) Stop the logo from visually overflowing the navbar on desktop */
+  .navbar{ --logo-scale: 1; }                 /* disable big transform on PC */
+  .navbar .brand img{
+    height: 36px !important;
+    max-height: 36px !important;
+    transform: none !important;
+  }
+
+  /* Give the page a bit more top offset to clear the (now taller) navbar */
+  :root{ --nav-h: 72px; }  /* body already uses padding-top: var(--nav-h) */
+
+  /* 2) Restore proper layout: main content + 320px aside */
+  .grid{
+    grid-template-columns: minmax(0, 1fr) 320px !important;
+    gap: 28px !important;
+  }
+
+  /* If there is no .aside in the grid, collapse to one column automatically */
+  .grid:not(:has(.aside)){
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 3) Desktop tidy-ups */
+  .aside{
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);  /* stay below the fixed navbar */
+    align-self: start;
+  }
+  .card{
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* ===== Desktop-only: hide the mobile menu container ===== */
+@media (min-width: 920px) {
+  /* never render the mobile overlay on desktop */
+  #mobileMenu,
+  .mobile-menu {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: static !important;
+    inset: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* hide hamburger on desktop just in case JS toggles it */
+  .hamburger { display: none !important; }
+}
