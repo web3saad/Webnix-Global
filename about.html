@@ -332,6 +332,60 @@ a:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible{
 }
 
 
+  /* --- Sticky navbar (always on top, subtle shadow when scrolling) --- */
+/* --- NAVBAR: fixed so it never hides --- */
+:root{ --navH: 64px; }   /* keep your existing value if different */
+
+body{
+  /* ensures content doesn't slide under the fixed navbar */
+  padding-top: var(--navH);
+}
+
+.navbar{
+  position: fixed;               /* <— was sticky */
+  top: 0; left: 0; right: 0;
+  height: var(--navH);
+  z-index: 2000;                 /* above all page content */
+  background:#fff;
+  border-bottom:1px solid rgba(0,0,0,.045);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+  transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.navbar.is-stuck{
+  box-shadow: 0 12px 28px rgba(17,24,39,.08);
+  border-bottom-color: rgba(0,0,0,.06);
+}
+
+/* keep your existing .nav-inner, .brand, etc. */
+
+/* --- Return to Home (end-of-page CTA) --- */
+.return-home{
+  padding: clamp(36px, 6vw, 72px) 0;
+  background: linear-gradient(180deg,#fafaff 0%,#f6f2ff 100%);
+  border-top: 1px solid #eceffa;
+}
+.return-home .container{
+  display:flex; justify-content:center; align-items:center;
+}
+.home-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  height:52px; padding:0 26px;
+  border-radius:14px; font-weight:800; font-size:15.5px;
+  color:#fff;
+  background:linear-gradient(180deg,#6c47ff 0%, #5a37ff 100%);
+  box-shadow:0 16px 28px rgba(108,71,255,.28), inset 0 1px 0 rgba(255,255,255,.16);
+  border:1px solid transparent;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.home-btn:hover{ transform: translateY(-1px) }
+.home-btn:focus-visible{
+  outline:none; box-shadow:0 0 0 2px rgba(108,71,255,.85), 0 0 0 5px rgba(108,71,255,.18);
+  border-radius:14px;
+}
+
+
+
   </style>
 </head>
 <body>
@@ -344,11 +398,11 @@ a:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible{
 
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html" aria-current="page">About</a></li>
-        <li><a href="#">Essential pages</a></li>
-        <li><a href="#">Blog</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="index.html#works">Portfolio</a></li>
       </ul>
-      <div class="nav-cta"><a href="#" class="btn btn-primary">Get in touch</a></div>
+      <div class="nav-cta"><a href="https://wa.me/919035409310" class="btn btn-primary">Get in touch</a></div>
 
       <button class="hamburger" aria-label="Open menu" id="hamburger"><span></span></button>
     </div>
@@ -356,12 +410,12 @@ a:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible{
     <nav class="mobile-menu" id="mobileMenu" aria-hidden="true">
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="#">Essential pages</a></li>
-        <li><a href="#">Blog</a></li>
+        <li><a href="index.html#services">Services</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="index.html#works">Portfolio</a></li>
       </ul>
       <div class="pad">
-        <a href="#" class="btn btn-primary" style="width:100%;">Get in touch</a>
+        <a href="https://wa.me/919035409310" class="btn btn-primary" style="width:100%;">Get in touch</a>
       </div>
     </nav>
   </header>
@@ -458,6 +512,13 @@ a:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible{
     </div>
   </div>
 
+  <!-- RETURN TO HOME -->
+<section class="return-home">
+  <div class="container">
+    <a class="home-btn" href="index.html" aria-label="Back to Home">← Back to Home</a>
+  </div>
+</section>
+
   <script>
     // mobile menu
     const burger = document.getElementById('hamburger');
@@ -490,5 +551,27 @@ a:focus-visible,.btn:focus-visible,.btn-ghost:focus-visible{
     window.addEventListener('scroll', stick, { passive:true });
   </script>
   
+  <script>
+  // Mobile menu toggle (animated burger)
+  const burger = document.getElementById('hamburger');
+  const menu   = document.getElementById('mobileMenu');
+  burger?.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    // lock background scroll when menu is open
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  // Sticky navbar shadow on scroll
+  const navbar = document.querySelector('.navbar');
+  const stick  = () => (window.scrollY > 6)
+    ? navbar.classList.add('is-stuck')
+    : navbar.classList.remove('is-stuck');
+  stick();
+  window.addEventListener('scroll', stick, { passive:true });
+</script>
+
 </body>
 </html>
